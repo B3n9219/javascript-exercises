@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <img src="#">
+  <button id="refresh">New cat GIF</button>
+  <form>
+    <label for="gif-search">Search a GIF:</label>
+    <input type="text" id="gif-search" name="search">
+    <button>submit</button>
+  </form>
+<script>
+  const img = document.querySelector('img')
+  function newGIF(type) {
+    fetch(`https://api.giphy.com/v1/gifs/translate?api_key=UoaCYdtdJtzltddpQqoIRq2yoFypPKQF&s=${type}`, {mode: "cors"})
+      .then(function(response) {
+        return response.json();
+      }).catch(() => {
+        console.log("Invalid URL")})
+      .then(function(response) {
+        img.src = response.data.images.original.url;
+      }).catch(()=> {
+        console.log("No such image")
+        img.src = "./noImage.png"
+    });
+  }
+  document.querySelector("#refresh").addEventListener('click', () => newGIF("cats"))
+  // newGIF(type="pizza")
+  document.querySelector("form").addEventListener('submit', (event) => {
+    event.preventDefault()
+    const form = event.target
+    const formData = new FormData(form)
+    const searchBoxValue = formData.get('search')
+    newGIF(searchBoxValue)
+  })
+</script>
+</body>
+</html>
